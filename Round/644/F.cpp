@@ -1,4 +1,4 @@
-#define LOCAL
+// #define LOCAL
 #ifdef LOCAL
 #define _GLIBCXX_DEBUG
 #endif
@@ -66,5 +66,75 @@ bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
-    
+    ll q; cin >> q;
+
+    auto c = [&](string &s, string &t){
+        ll m = s.size();
+        ll cnt = 0;
+        rep(i,m){
+            if(s[i] != t[i])cnt++;
+        }
+        return cnt <= 1;
+    };
+    while(q--){
+        ll n,m; cin >> n >> m;
+        string s[n];
+        rep(i,n)cin >> s[i];
+
+        ll dif = 0;
+        string s1, s2;
+        rep(i,n)rep(j,n){
+            string s1t = "";
+            string s2t = "";
+            if(i <= j)continue;
+            ll cnt = 0;
+            rep(k,m){
+                if(s[i][k] != s[j][k]){
+                    cnt++;
+                    if(cnt == 1){
+                        s1t += s[i][k];
+                        s2t += s[j][k];
+                    }
+                    else{
+                        s1t += s[j][k];
+                        s2t += s[i][k];
+                    }
+                }
+                else{
+                    s1t += s[i][k];
+                    s2t += s[i][k];
+                }
+            }
+            chmax(dif, cnt);
+            if(cnt == 2){
+                s1 = s1t;
+                s2 = s2t;
+            }
+        }
+
+        debug(s1, s2, dif);
+        if(dif <= 1){
+            cout << s[0] << "\n";
+            continue;
+        }
+        if(dif > 2){
+            cout << -1 << "\n";
+            continue;
+        }
+        bool t1 = true, t2 = true;
+        rep(i,n){
+            t1 &= c(s1, s[i]);
+            t2 &= c(s2, s[i]);
+        }
+
+        if(t1){
+            cout << s1 << "\n";
+        }
+        else if(t2){
+            cout << s2 << "\n";
+        }
+        else{
+            cout << -1 << "\n";
+        }
+    }
 }

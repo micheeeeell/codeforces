@@ -1,4 +1,3 @@
-#define LOCAL
 #ifdef LOCAL
 #define _GLIBCXX_DEBUG
 #endif
@@ -16,7 +15,7 @@ typedef vector<ll> vl;
 typedef vector<vl> vvl;
 typedef vector<vvl> vvvl;
 constexpr ll INF = numeric_limits<ll>::max()/4;
-constexpr ll n_max = 2e5+10;
+constexpr ll n_max = 2e3;
 #define int ll
 
 template <typename A, typename B>
@@ -62,9 +61,7 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
@@ -73,28 +70,18 @@ signed main(){
         ll n; cin >> n;
         vector<ll> a(n);
         rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
         sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
+        ll ans = -1;
+        reps(j, 1023){
+            vector<ll> t(n);
+            rep(k,n)t[k] = a[k] ^ j;
+            sort(all(t));
+            if(a == t){
+                ans = j;
+                break;
             }
         }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
-        }
 
-        YES(ok);
+        cout << ans << "\n";
     }
 }

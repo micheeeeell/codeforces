@@ -1,4 +1,3 @@
-#define LOCAL
 #ifdef LOCAL
 #define _GLIBCXX_DEBUG
 #endif
@@ -62,39 +61,77 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
+template <class T>
+void print(vector<T> &vec, ll k){
+    ll n = vec.size();
+    k = min(k, n);
+    rep(i,k-1)cout << vec[i] << " ";
+    cout << vec[k-1] << endl;
+}
+template <class T>
+void print(vector<vector<T>> &vec, ll k){
+    ll n = vec[0].size();
+    k = min(k, n);
+    for(auto &i : vec)print(i, k);
+}
+vector<vector<ll>> graph(n_max);
+vector<ll> a(n_max),b(n_max),c(n_max);
+vector<ll> pre(n_max), nxt(n_max);
+vector<ll> sub(n_max);
+void pre_dfs(ll now, ll par = -1){
+    ll cnt = b[now];
+    ll nxt_cnt = c[now];
+    ll sc = 1;
+    for(auto &to : graph[now]){
+        if(to == par)continue;
+        pre_dfs(to, now);
+        cnt += pre[to];
+        nxt_cnt += nxt[to];
+        sc += sub[to];
+    }
+    pre[now] = cnt;
+    nxt[now] = nxt_cnt;
+    sub[now] = sc;
+}
+ll ans = 0;
+void dfs(ll now, ll par = -1, ll cost = INF, ll up = 0){
+    ll cnt = b[now] != c[now];
+    chmin(cost, a[now]);
+    for(auto &to : graph[now]){
+        if(to == par)continue;
+        cnt += abs(pre[to] - nxt[to]);
+        dfs(to, now, cost, abs(pre[to] - nxt[to]));
+    }
+    debug(now, cnt, cost);
+    cnt -= up;
+    if(sub[now] > 1)ans += cost * cnt;
 }
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
-    ll q; cin >> q;
-    while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
-            }
-        }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
-        }
-
-        YES(ok);
+    ll n; cin >> n;
+    ll bc = 0, cc = 0;
+    rep(i,n){
+        cin >> a[i] >> b[i] >> c[i];
+        bc += b[i];
+        cc += c[i];
     }
+    rep(i,n-1) {
+        ll u,v;cin >> u >> v;
+        u--;v--;
+        graph[u].emplace_back(v);
+        graph[v].emplace_back(u);
+    }
+
+    if(bc != cc){
+        cout << -1 << endl;
+        return 0;
+    }
+
+    pre_dfs(0);
+    // print(pre, 10);
+    // print(nxt, 10);
+    // print(sub, 10);
+    dfs(0);
+    cout << ans << endl;
 }

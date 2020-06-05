@@ -62,9 +62,36 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-
+void YES(bool ok){
+    cout << (ok ? "YES" : "NO") << endl;
+}
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
-    
+    ll q; cin >> q;
+    while(q--){
+        ll n; cin >> n;
+        string s[n];
+        rep(i,n) cin >> s[i];
+        ll dx[] = {0,1};
+        ll dy[] = {1,0};
+        auto is_out = [&](ll x, ll y){
+           if(x < 0 || x >= n || y < 0 || y >= n)return true;
+           return false;
+        };
+        bool ok = true;
+        rep(x,n)rep(y,n){
+            bool temp = false;
+            if(s[x][y] == '0')continue;
+            rep(k,2){
+                ll nx = x + dx[k], ny = y + dy[k];
+                temp |= is_out(nx, ny);
+                if(is_out(nx, ny))continue;
+                temp |= s[nx][ny] == '1';
+            }
+
+            ok &= temp;
+        }
+        YES(ok);
+    }
 }

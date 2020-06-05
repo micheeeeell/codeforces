@@ -66,5 +66,10 @@ bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
-    
+    ll t; cin >> t;
+    while(t--){
+        ll a,b; cin >> a >> b;
+        ll n = max(min(a,b) * 2, max(a, b));
+        cout << n * n << "\n";
+    }
 }

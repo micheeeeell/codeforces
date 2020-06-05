@@ -1,4 +1,3 @@
-#define LOCAL
 #ifdef LOCAL
 #define _GLIBCXX_DEBUG
 #endif
@@ -63,38 +62,34 @@ bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
 void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
+    cout << (ok ? "Yes" : "No") << endl;
 }
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
     ll q; cin >> q;
-    while(q--){
-        ll n; cin >> n;
+    while (q--){
+        ll n,x; cin >> n >> x;
         vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
+        ll od = 0, ev = 0;
         rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
+            cin >> a[i];
+            if(a[i] & 1)od++;
+            else ev++;
         }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
-            }
+        debug(od, ev);
+        if(od == 0){
+            YES(false);
+            continue;
         }
+        if(od % 2 == 0)od--;
         bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
+        if((x - od) <= ev)ok = true;
+        if(x % 2 == 0){
+            ok &= ev > 0;
         }
-        else{
-            ok |= like > 0;
-        }
-
         YES(ok);
+
     }
+    
 }

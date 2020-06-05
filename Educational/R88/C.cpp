@@ -1,4 +1,4 @@
-#define LOCAL
+// #define LOCAL
 #ifdef LOCAL
 #define _GLIBCXX_DEBUG
 #endif
@@ -18,7 +18,7 @@ typedef vector<vvl> vvvl;
 constexpr ll INF = numeric_limits<ll>::max()/4;
 constexpr ll n_max = 2e5+10;
 #define int ll
-
+ 
 template <typename A, typename B>
 string to_string(pair<A, B> p);
 string to_string(const string &s) {return '"' + s + '"';}
@@ -44,57 +44,60 @@ string to_string(A v) {
 }
 template <typename A, typename B>
 string to_string(pair<A, B> p){return "(" + to_string(p.first) + ", " + to_string(p.second) + ")";}
-
+ 
 void debug_out() {cerr << endl;}
 template<typename Head, typename... Tail>
 void debug_out(Head H, Tail... T) {
     cerr << " " << to_string(H);
     debug_out(T...);
 }
-
+ 
 #ifdef LOCAL
 #define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
 #else
 #define debug(...) 42
 #endif
-
+ 
 template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+ 
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
+    
     ll q; cin >> q;
     while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
+        ld h,c,t; cin >> h >> c >> t;
+        if(t * 2 <= h + c){
+            cout << 2 << "\n";
+            continue;
         }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
+        if(t >= h){
+            cout << 1 << "\n";
+            continue;
+        }
+        ld k1 = floor((h - t) / (2 * t - h - c));
+        ld dif = INF;
+        auto tem = [&](ld k)->ld{
+            return (h * (k + 1) + c * k) / (2 * k + 1);
+        };
+        ll ans;
+        for(int k = max(0.0L, k1-100); k < k1+100; k++){
+            if(chmin(dif, abs(t - tem(k)))){
+                ans = k * 2 + 1;
             }
         }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
+ 
+        if(chmin(dif, abs(t - h))){
+            ans = 1;
         }
-        else{
-            ok |= like > 0;
+ 
+        if(chmin(dif, abs(t - (h + c) / 2))){
+            ans = 2;
         }
-
-        YES(ok);
+ 
+        cout << ans << "\n";
     }
 }

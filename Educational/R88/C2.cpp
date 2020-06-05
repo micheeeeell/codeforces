@@ -62,39 +62,44 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
+    
     ll q; cin >> q;
     while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
+        long double h,c,t; cin >> h >> c >> t;
+        if(t * 2 <= (h + c)){
+            cout << 2 << "\n";
+            continue;
         }
 
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
-            }
+        auto tem = [&](ll k)->long double{
+            return (h * (k + 1) + c * k) / (2 * k + 1);
+        };
+        ll ans;
+        ll ok = 1e9;
+        ll ng = -1;
+        while(abs(ok - ng) > 1){
+            ll x = (ok + ng) / 2;
+            if(tem(x) <= t)ok = x;
+            else ng = x;
         }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
+        long double dif = INF;
+        debug(ok, ng, abs(t - tem(ng)), abs(t - tem(ok)));
+        if(chmin(dif, abs(t - tem(ng)))){
+            ans = ng * 2 + 1;
         }
-        else{
-            ok |= like > 0;
+        if(chmin(dif, abs(t - tem(ok)))){
+            ans = ok * 2 + 1;
         }
-
-        YES(ok);
+        // if(abs(t - tem(ok)) < abs(t - tem(ng))){
+        //     ans = ok * 2 + 1;
+        // }
+        // else {
+        //     ans = ng * 2 + 1;
+        // }
+        cout << ans << "\n";
     }
 }

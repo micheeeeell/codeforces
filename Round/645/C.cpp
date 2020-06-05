@@ -62,39 +62,36 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
     ll q; cin >> q;
+
+    auto wid = [&](ll k){
+        return k * (k * k + 5) / 6;
+    };
+    auto hig = [&](ll k){
+        return k * (k + 1) * (k + 2) / 6;
+    };
+
+    auto a_wid = [&](ll k){
+        return (k * k - k + 2) / 2;
+    };
+
+    auto a_hig = [&](ll k){
+        return (k + 1) * k / 2;
+    };
+
     while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
-            }
-        }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
-        }
-
-        YES(ok);
+        ll x,y; cin >> x >> y;
+        ll x2,y2; cin >> x2 >> y2;
+        x2 -= x;
+        y2 -= y;
+        ll mi = min(x2, y2);
+        ll ma = max(x2, y2);
+        ll dif = mi * mi;
+        dif += mi * (ma - mi);
+        cout << dif+1 << endl;
     }
 }

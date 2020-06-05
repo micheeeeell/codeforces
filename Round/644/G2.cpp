@@ -63,38 +63,31 @@ bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
 void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
+    cout << (ok ? "YES" : "NO") << "\n";
 }
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
     ll q; cin >> q;
     while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
+        ll n,m; cin >> n >> m;
+        ll a,b; cin >> a >> b;
+        ll g = gcd(n, m);
+        Pll p1 = {n / g, m / g};
+        ll xt = n / g, yt = m / g;
+        g = gcd(a, b);
+        Pll p2 = {b / g, a / g};
+        YES(p1 == p2);
+        if(p1 != p2)continue;
 
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
+        vector<string> s(n, string(m, '.'));
+        rep(i,n){
+            ll x = (i / xt) * yt;
+            rep(j,m){
+                if(j < a)s[i][(x + j) % m] = '1';
+                else s[i][(x + j) % m] = '0';
             }
         }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
-        }
-
-        YES(ok);
+        rep(i,n)cout << s[i] << "\n";
     }
 }

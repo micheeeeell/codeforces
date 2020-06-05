@@ -1,4 +1,4 @@
-#define LOCAL
+// #define LOCAL
 #ifdef LOCAL
 #define _GLIBCXX_DEBUG
 #endif
@@ -62,39 +62,45 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
     ll q; cin >> q;
     while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
+        ll n,m; cin >> n >> m;
+        vector<ll> v(n);
         rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
+            string s;cin >> s;
+            ll t = 0;
+            reverse(all(s));
+            ll c = 1;
+            rep(j,m){
+                if(s[j] == '1')t += c;
+                c *= 2;
             }
+            v[i] = t;
         }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
-        }
+        ll cnt = ((1LL << m) - n + 1) / 2;
+        debug(cnt);
+        auto c = [&](ll x){
+            ll temp = x+1;
+            rep(i,n)if(x >= v[i])temp--;
+            return temp >= cnt;
+        };
 
-        YES(ok);
+        ll ok = (1LL << m);
+        ll ng = -1;
+        while(abs(ok - ng) > 1){
+            ll x = (ok + ng) / 2;
+            if(c(x))ok = x;
+            else ng = x;
+        }
+        debug(ok);
+        bitset<n_max> bs(ok);
+        string s;
+        rep(i,m)s += '0' + bs[i];
+        reverse(all(s));
+        cout << s << "\n";
     }
 }

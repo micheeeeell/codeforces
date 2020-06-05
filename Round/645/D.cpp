@@ -1,4 +1,4 @@
-#define LOCAL
+// #define LOCAL
 #ifdef LOCAL
 #define _GLIBCXX_DEBUG
 #endif
@@ -62,39 +62,52 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
-    ll q; cin >> q;
-    while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
-            }
-        }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
-        }
-
-        YES(ok);
+    ll n,x; cin >> n >> x;
+    vector<ll> a(n);
+    rep(i,n) cin >> a[i];
+    vector<ll> t = a;
+    copy(all(t), back_inserter(a));
+    debug(a);
+    vector<ll> sum(2*n+1), sum2(2*n+1);
+    rep(i,2*n){
+        sum[i+1] = sum[i] + a[i];
+        sum2[i+1] = sum2[i] + a[i] * (a[i] + 1) / 2;
     }
+    debug(sum);
+    ll ans = 0;
+    auto c = [&](ll &k, ll &x){
+        ll res = (k - x + 1 + k) * x / 2;
+        x = 0;
+        return res;
+    };
+
+    auto min_month =[&](ll i, ll x){
+        if(a[i] >= x)return i;
+        ll ok = i+1;
+        ll ng = 0;
+        while(abs(ok - ng) > 1){
+            ll k = (ok + ng) / 2;
+            if(sum[i+1] - sum[k] <= x)ok = k;
+            else ng = k;
+        }
+
+        return ok-1;
+    };
+    for(int i = n; i < 2 * n; i++){
+        ll temp = x;
+        ll t_ans = 0;
+        ll id = min_month(i, temp);
+        t_ans += sum2[i+1] - sum2[id+1];
+        debug(i, id, t_ans);
+        temp -= sum[i+1] - sum[id+1];
+        t_ans += c(a[id], temp);
+        debug(t_ans);
+        chmax(ans, t_ans);
+    }
+
+    cout << ans << "\n";
 }

@@ -62,39 +62,39 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
+    
     ll q; cin >> q;
+
+    
     while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
+        ll h,w; cin >> h >> w;
+        ll a,b; cin >> a >> b;
+        string s[h];
+        rep(i,h)cin >> s[i];
+        auto is_out = [&](ll x, ll y){
+           if(x < 0 || x >= h || y < 0 || y >= w)return true;
+           return false;
+        };
+        ll ans = 0;
+        rep(i,h)rep(j,w){
+            if(s[i][j] == '*')continue;
+            ll nx = i, ny = j+1;
+            if(is_out(nx, ny) || s[nx][ny] == '*'){
+                ans += a;
+                continue;
             }
-        }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
+            if(a * 2 < b){
+                ans += a;
+                continue;
+            }
+            ans += b;
+            j++;
         }
 
-        YES(ok);
+        cout << ans << "\n";
     }
 }

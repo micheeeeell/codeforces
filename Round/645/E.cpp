@@ -62,39 +62,41 @@ template<class T>
 bool chmax(T &a, T b){if(a < b){a = b; return true;} return false;}
 template<class T>
 bool chmin(T &a, T b){if(a > b){a = b; return true;} return false;}
-void YES(bool ok){
-    cout << (ok ? "YES" : "NO") << endl;
-}
+
 signed main(){
     cin.tie(nullptr);
     ios::sync_with_stdio(false);
-    ll q; cin >> q;
-    while(q--){
-        ll n; cin >> n;
-        vector<ll> a(n);
-        rep(i,n) cin >> a[i];
-        ll odd = 0, even = 0;
-        sort(all(a));
-        ll like = 0;
-        rep(i,n){
-            if(a[i] & 1)odd++;
-            else even++;
-        }
-
-        rep(i,n-1){
-            if(a[i+1] - a[i] == 1){
-                like++;
-                i++;
-            }
-        }
-        bool ok = false;
-        if(even % 2 == 0 && odd % 2 == 0){
-            ok = true;
-        }
-        else{
-            ok |= like > 0;
-        }
-
-        YES(ok);
+    ll n; cin >> n;
+    vector<ll> v(n);
+    ll sum = 0, sum2 = 0;
+    rep(i,(n+1)/2){
+        cin >> v[i];
+        sum += v[i];
+        sum2 += v[i];
     }
+    ll x; cin >> x;
+    for(int i = (n+1) / 2; i < n; i++){
+        v[i] = x;
+        sum += v[i];
+    }
+
+    if(x > 0){
+        if(sum <= 0){
+            cout << -1 << endl;
+            return 0;
+        }
+        else {
+            cout << n << endl;
+            return 0;
+        }
+    }
+    else{
+        if(sum2 + x > 0){
+            cout << (n + 1) / 2 + 1 << endl;
+        }
+        else {
+            cout << -1 << endl;
+        }
+    }
+    
 }
